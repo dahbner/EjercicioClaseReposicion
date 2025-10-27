@@ -27,5 +27,25 @@ namespace Security.Repositories
         {
             return await _db.Hospitals.FirstOrDefaultAsync(x => x.Id == id);
         }
+        public async Task Update(Hospital hospital)
+        {
+            _db.Entry(hospital).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+        }
+        public async Task Delete(Guid id)
+        {
+            var hospital = await GetOne(id);
+            if (hospital != null)
+            {
+                _db.Hospitals.Remove(hospital);
+                await _db.SaveChangesAsync();
+            }
+        }
+        public async Task<IEnumerable<Hospital>> GetPublicHospitals()
+        {
+            return await _db.Hospitals
+                .Where(h => h.Type == 1 || h.Type == 3)
+                .ToListAsync();
+        }
     }
 }

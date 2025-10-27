@@ -33,5 +33,36 @@ namespace Security.Services
         {
             return await _repo.GetOne(id);
         }
+
+        public async Task<bool> UpdateHospital(Guid id, UpdateHospitalDto dto)
+        {
+            var hospital = await _repo.GetOne(id);
+            if (hospital == null)
+            {
+                return false;
+            }
+
+            hospital.Name = dto.Name;
+            hospital.Address = dto.Address;
+            hospital.Type = dto.Type;
+
+            await _repo.Update(hospital);
+            return true;
+        }
+        public async Task<bool> DeleteHospital(Guid id)
+        {
+            var hospital = await _repo.GetOne(id);
+            if (hospital == null)
+            {
+                return false;
+            }
+
+            await _repo.Delete(id);
+            return true;
+        }
+        public async Task<IEnumerable<Hospital>> GetPublicHospitals()
+        {
+            return await _repo.GetPublicHospitals();
+        }
     }
 }
